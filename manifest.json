@@ -1,0 +1,13 @@
+
+{
+  "name": "IdeaVault",
+  "short_name": "IdeaVault",
+  "description": "Save, organize, search, and revisit ideas from across the web.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f5f0",
+  "theme_color": "#f7f5f0",
+  "icons": []
+}
