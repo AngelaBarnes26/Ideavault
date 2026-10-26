@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f5f0">
+<title>IdeaVault</title>
+<style>
+:root {
+  --bg: #f7f5f0;
+  --card: #ffffff;
+  --ink: #292d29;
+  --muted: #777d75;
+  --accent: #526b56;
+  --line: #e5e5dc;
+  --soft: #e9eee6;
+  --danger: #a13c35;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+header {
+  padding: 26px 20px 18px;
+  max-width: 850px;
+  margin: auto;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 45px; height: 45px;
+  display: grid; place-items: center;
+  background: var(--accent); color: white;
+  border-radius: 14px; font-size: 24px;
+}
+h1 { font-size: 25px; margin: 0; letter-spacing: -.7px; }
+.subtitle { color: var(--muted); margin: 5px 0 0; font-size: 13px; }
+main { max-width: 850px; margin: auto; padding: 0 16px 45px; }
+.toolbar { display: flex; gap: 9px; margin: 12px 0 18px; }
+.search {
+  flex: 1; min-width: 0; background: white;
+  border: 1px solid var(--line); border-radius: 12px;
+  padding: 13px;
+}
+.primary, .secondary, .danger {
+  border: 0; border-radius: 11px; padding: 12px 15px;
+  font-weight: 600;
+}
+.primary { background: var(--accent); color: white; }
+.secondary { background: var(--soft); color: var(--ink); }
+.danger { background: #f8e9e7; color: var(--danger); }
+.stats {
+  display: flex; gap: 10px; margin-bottom: 20px;
+}
+.stat {
+  flex: 1; background: var(--card);
+  border: 1px solid var(--line); border-radius: 13px;
+  padding: 13px;
+}
+.stat strong { display: block; font-size: 22px; }
+.stat span { color: var(--muted); font-size: 12px; }
+.section-title {
+  font-size: 17px; font-weight: 700; margin: 20px 0 12px;
+}
+.filters { display: flex; gap: 8px; margin-bottom: 16px; }
+.filters select {
+  flex: 1; min-width: 0; background: white;
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px;
+}
+.list { display: grid; gap: 11px; }
+.item {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 15px; padding: 15px;
+}
+.item-top { display: flex; gap: 10px; align-items: flex-start; }
+.item-info { flex: 1; min-width: 0; }
+.item h3 { font-size: 16px; margin: 0 0 7px; overflow-wrap: anywhere; }
+.item p { line-height: 1.45; margin: 8px 0; overflow-wrap: anywhere; }
+.meta { font-size: 12px; color: var(--muted); }
+.category {
+  display: inline-block; background: var(--soft); color: var(--accent);
+  border-radius: 20px; padding: 5px 9px; font-size: 11px;
+  font-weight: 650; margin: 2px 0 5px;
+}
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.tag {
+  border: 1px solid var(--line); border-radius: 20px;
+  padding: 4px 8px; font-size: 11px; color: var(--muted);
+}
+.link {
+  display: block; margin-top: 9px; color: var(--accent);
+  overflow-wrap: anywhere; font-size: 13px;
+}
+.actions { display: flex; gap: 8px; margin-top: 13px; }
+.actions button { font-size: 12px; padding: 8px 11px; }
+.empty {
+  text-align: center; padding: 38px 18px; background: white;
+  border: 1px dashed #d4d5ca; border-radius: 15px;
+}
+.empty .emoji { font-size: 34px; }
+.empty h3 { margin-bottom: 5px; }
+.empty p { color: var(--muted); font-size: 13px; line-height: 1.5; }
+dialog {
+  border: 0; border-radius: 18px; padding: 0;
+  width: calc(100% - 28px); max-width: 510px;
+  max-height: 90vh; color: var(--ink);
+  background: var(--bg);
+}
+dialog::backdrop { background: #20251f99; }
+.form-head {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.form-head h2 { font-size: 19px; margin: 0; }
+.close {
+  border: 0; background: transparent; font-size: 25px;
+  color: var(--muted); padding: 0 4px;
+}
+form { padding: 18px 20px 22px; overflow-y: auto; }
+label { display: block; font-size: 13px; font-weight: 650; margin-bottom: 14px; }
+label small { display: block; font-weight: 400; color: var(--muted); margin-top: 4px; }
+label input, label textarea, label select {
+  display: block; width: 100%; margin-top: 7px;
+  border: 1px solid var(--line); background: white;
+  border-radius: 10px; padding: 12px; color: var(--ink);
+}
+label textarea { resize: vertical; min-height: 75px; }
+.form-actions { display: flex; gap: 9px; }
+.form-actions button { flex: 1; }
+.bottom-tools {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 26px; padding-top: 17px;
+  border-top: 1px solid var(--line);
+}
+.bottom-tools button, .bottom-tools label { font-size: 12px; }
+.bottom-tools input[type=file] { display: none; }
+footer { text-align: center; color: var(--muted); font-size: 11px; padding: 12px; }
+@media (min-width: 600px) {
+  header { padding-top: 36px; }
+  main { padding-left: 24px; padding-right: 24px; }
+  .list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">✳</div>
+    <div>
+      <h1>IdeaVault</h1>
+      <p class="subtitle">A home for things worth remembering.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="toolbar">
+    <input id="search" class="search" type="search"
+      placeholder="Search ideas, notes, tags..." aria-label="Search ideas">
+    <button class="primary" id="addBtn">＋ Save</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong id="totalCount">0</strong><span>Saved ideas</span></div>
+    <div class="stat"><strong id="categoryCount">0</strong><span>Categories</span></div>
+    <div class="stat"><strong id="favoriteCount">0</strong><span>Favorites</span></div>
+  </div>
+
+  <div class="section-title">Your library</div>
+  <div class="filters">
+    <select id="categoryFilter" aria-label="Filter by category">
+      <option value="">All categories</option>
+    </select>
+    <select id="sortFilter" aria-label="Sort ideas">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="title">Title A–Z</option>
+      <option value="favorites">Favorites first</option>
+    </select>
+  </div>
+
+  <div id="list" class="list"></div>
+
+  <div class="bottom-tools">
+    <button class="secondary" id="exportBtn">Export backup</button>
+    <label class="secondary" style="padding:12px 15px;border-radius:11px;cursor:pointer">
+      Import backup
+      <input id="importFile" type="file" accept=".json,application/json">
+    </label>
+    <button class="secondary" id="helpBtn">How it works</button>
+  </div>
+  <footer>Your ideas are stored in this browser on this device.</footer>
+</main>
+
+<dialog id="editor">
+  <div class="form-head">
+    <h2 id="formTitle">Save an idea</h2>
+    <button class="close" type="button" id="closeBtn" aria-label="Close">×</button>
+  </div>
+  <form id="ideaForm">
+    <input id="ideaId" type="hidden">
+    <label>Link
+      <input id="url" type="url" placeholder="https://..." inputmode="url">
+      <small>Paste a webpage, Facebook post, video, or other URL.</small>
+    </label>
+    <label>Title *
+      <input id="title" required maxlength="200" placeholder="What do you want to remember?">
+    </label>
+    <label>Why did you save it?
+      <textarea id="note" maxlength="5000" placeholder="What caught your attention? How might you use it?"></textarea>
+    </label>
+    <label>Category
+      <input id="category" list="categoryOptions" placeholder="e.g. Home & DIY">
+      <datalist id="categoryOptions"></datalist>
+    </label>
+    <label>Tags
+      <input id="tags" placeholder="kitchen, storage, inspiration">
+      <small>Separate tags with commas.</small>
+    </label>
+    <label>Project (optional)
+      <input id="project" placeholder="e.g. Kitchen remodel">
+    </label>
+    <label>Summary (optional)
+      <textarea id="summary" maxlength="3000" placeholder="A short description of the content. Add this manually for now."></textarea>
+    </label>
+    <div class="form-actions">
+      <button class="secondary" type="button" id="cancelBtn">Cancel</button>
+      <button class="primary" type="submit">Save idea</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="help">
+  <div class="form-head">
+    <h2>Using IdeaVault</h2>
+    <button class="close" type="button" id="helpClose">×</button>
+  </div>
+  <div style="padding:18px 20px;line-height:1.6">
+    <p><b>Save:</b> Add a link, title, notes, tags, and a category.</p>
+    <p><b>Search:</b> Search across titles, links, notes, categories, projects, summaries, and tags.</p>
+    <p><b>Organize:</b> Filter by category or sort by date, title, or favorites.</p>
+    <p><b>Back up:</b> Export a JSON file regularly. Import a backup to restore or combine saved ideas.</p>
+    <p><b>Privacy:</b> Your entries are stored in this browser on this device. They are not automatically synced to another device.</p>
+    <p><b>Important:</b> This version does not automatically read Facebook content or generate AI summaries. Those are future features.</p>
+    <button class="primary" id="helpDone" style="width:100%">Got it</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  "use strict";
+  const KEY = "ideavault.items.v1";
+  const $ = id => document.getElementById(id);
+  let items = [];
+  let query = "";
+  let categoryFilter = "";
+  let sortMode = "newest";
+
+  try {
+    const saved = localStorage.getItem(KEY);
+    const parsed = saved ? JSON.parse(saved) : [];
+    if (Array.isArray(parsed)) items = parsed;
+  } catch (e) {
+    console.error("Could not load saved ideas.", e);
+  }
+
+  function persist() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(items));
+      return true;
+    } catch (e) {
+      alert("Your browser could not save the changes. Export a backup and check available device storage.");
+      return false;
+    }
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    })[ch]);
+  }
+
+  function safeURL(value) {
+    try {
+      const u = new URL(value);
+      return ["http:", "https:"].includes(u.protocol) ? u.href : "";
+    } catch { return ""; }
+  }
+
+  function categories() {
+    return [...new Set(items.map(x => x.category).filter(Boolean))]
+      .sort((a,b) => a.localeCompare(b));
+  }
+
+  function refreshCategories() {
+    const cats = categories();
+    const filter = $("categoryFilter");
+    const current = categoryFilter;
+    filter.innerHTML = '<option value="">All categories</option>' +
+      cats.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+    filter.value = cats.includes(current) ? current : "";
+    categoryFilter = filter.value;
+    $("categoryOptions").innerHTML =
+      cats.map(c => `<option value="${escapeHTML(c)}"></option>`).join("");
+  }
+
+  function render() {
+    refreshCategories();
+    $("totalCount").textContent = items.length;
+    $("categoryCount").textContent = categories().length;
+    $("favoriteCount").textContent = items.filter(x => x.favorite).length;
+
+    let visible = items.filter(x => {
+      const haystack = [x.title,x.url,x.note,x.category,x.project,x.summary,...(x.tags || [])]
+        .join(" ").toLowerCase();
+      return haystack.includes(query.toLowerCase()) &&
+        (!categoryFilter || x.category === categoryFilter);
+    });
+
+    visible.sort((a,b) => {
+      if (sortMode === "title") return a.title.localeCompare(b.title);
+      if (sortMode === "oldest") return a.createdAt - b.createdAt;
+      if (sortMode === "favorites" && a.favorite !== b.favorite) return a.favorite ? -1 : 1;
+      return b.createdAt - a.createdAt;
+    });
+
+    const list = $("list");
+    if (!visible.length) {
+      list.innerHTML = `
+        <div class="empty">
+          <div class="emoji">${items.length ? "🔎" : "💡"}</div>
+          <h3>${items.length ? "No matching ideas" : "Your library starts here"}</h3>
+          <p>${items.length ? "Try a different search or category." : "Save a link or thought now. You can organize it later."}</p>
+          ${items.length ? "" : '<button class="primary" id="emptyAdd">＋ Save your first idea</button>'}
+        </div>`;
+      const emptyAdd = $("emptyAdd");
+      if (emptyAdd) emptyAdd.addEventListener("click", () => openEditor());
+      return;
+    }
+
+    list.innerHTML = visible.map(x => {
+      const link = safeURL(x.url);
+      const tags = (x.tags || []).map(t => `<span class="tag">#${escapeHTML(t)}</span>`).join("");
+      return `
+        <article class="item">
+          <div class="item-top">
+            <div class="item-info">
+              <h3>${escapeHTML(x.title)}</h3>
+              ${x.category ? `<span class="category">${escapeHTML(x.category)}</span>` : ""}
+              <div class="meta">${new Date(x.createdAt).toLocaleDateString()}</div>
+            </div>
+            <button class="secondary favorite" data-id="${x.id}" aria-label="Toggle favorite">
+              ${x.favorite ? "★" : "☆"}
+            </button>
+          </div>
+          ${x.note ? `<p>${escapeHTML(x.note)}</p>` : ""}
+          ${x.summary ? `<p><b>Summary:</b> ${escapeHTML(x.summary)}</p>` : ""}
+          ${x.project ? `<div class="meta">Project: ${escapeHTML(x.project)}</div>` : ""}
+          ${tags ? `<div class="tags">${tags}</div>` : ""}
+          ${link ? `<a class="link" href="${escapeHTML(link)}" target="_blank" rel="noopener noreferrer">↗ Open original link</a>` : ""}
+          <div class="actions">
+            <button class="secondary edit" data-id="${x.id}">Edit</button>
+            <button class="secondary copy" data-id="${x.id}">Copy link</button>
+            <button class="danger delete" data-id="${x.id}">Delete</button>
+          </div>
+        </article>`;
+    }).join("");
+
+    list.querySelectorAll(".edit").forEach(b => b.addEventListener("click", () => {
+      const item = items.find(x => x.id === b.dataset.id);
+      if (item) openEditor(item);
+    }));
+    list.querySelectorAll(".delete").forEach(b => b.addEventListener("click", () => {
+      const item = items.find(x => x.id === b.dataset.id);
+      if (item && confirm(`Delete "${item.title}"?`)) {
+        items = items.filter(x => x.id !== item.id);
+        persist(); render();
+      }
+    }));
+    list.querySelectorAll(".favorite").forEach(b => b.addEventListener("click", () => {
+      const item = items.find(x => x.id === b.dataset.id);
+      if (item) { item.favorite = !item.favorite; persist(); render(); }
+    }));
+    list.querySelectorAll(".copy").forEach(b => b.addEventListener("click", async () => {
+      const item = items.find(x => x.id === b.dataset.id);
+      if (!item?.url) { alert("This idea has no link."); return; }
+      try {
+        await navigator.clipboard.writeText(item.url);
+        alert("Link copied.");
+      } catch {
+        prompt("Copy this link:", item.url);
+      }
+    }));
+  }
+
+  function openEditor(item = null) {
+    $("ideaForm").reset();
+    $("ideaId").value = item?.id || "";
+    $("formTitle").textContent = item ? "Edit idea" : "Save an idea";
+    $("url").value = item?.url || "";
+    $("title").value = item?.title || "";
+    $("note").value = item?.note || "";
+    $("category").value = item?.category || "";
+    $("tags").value = (item?.tags || []).join(", ");
+    $("project").value = item?.project || "";
+    $("summary").value = item?.summary || "";
+    $("editor").showModal();
+  }
+
+  $("addBtn").addEventListener("click", () => openEditor());
+  $("closeBtn").addEventListener("click", () => $("editor").close());
+  $("cancelBtn").addEventListener("click", () => $("editor").close());
+  $("search").addEventListener("input", e => { query = e.target.value; render(); });
+  $("categoryFilter").addEventListener("change", e => { categoryFilter = e.target.value; render(); });
+  $("sortFilter").addEventListener("change", e => { sortMode = e.target.value; render(); });
+
+  $("ideaForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const rawURL = $("url").value.trim();
+    if (rawURL && !safeURL(rawURL)) {
+      alert("Please enter a valid link beginning with https:// or http://.");
+      return;
+    }
+    const title = $("title").value.trim();
+    if (!title) { alert("Please enter a title."); return; }
+
+    const id = $("ideaId").value;
+    const old = items.find(x => x.id === id);
+    const item = {
+      id: id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()),
+      url: rawURL,
+      title,
+      note: $("note").value.trim(),
+      category: $("category").value.trim(),
+      tags: [...new Set($("tags").value.split(",").map(t => t.trim()).filter(Boolean))],
+      project: $("project").value.trim(),
+      summary: $("summary").value.trim(),
+      createdAt: old?.createdAt || Date.now(),
+      updatedAt: Date.now(),
+      favorite: old?.favorite || false
+    };
+    const previous = items;
+    items = old ? items.map(x => x.id === id ? item : x) : [item, ...items];
+    if (persist()) {
+      $("editor").close();
+      render();
+    } else {
+      items = previous;
+    }
+  });
+
+  $("exportBtn").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify({
+      app: "IdeaVault", version: 1, exportedAt: new Date().toISOString(), items
+    }, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ideavault-backup-" + new Date().toISOString().slice(0,10) + ".json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  $("importFile").addEventListener("change", async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text());
+      const incoming = Array.isArray(parsed) ? parsed : parsed.items;
+      if (!Array.isArray(incoming)) throw new Error("This file doesn't contain an IdeaVault backup.");
+      const valid = incoming.filter(x => x && typeof x.title === "string").map(x => ({
+        id: String(x.id || (crypto.randomUUID ? crypto.randomUUID() : Date.now() + Math.random())),
+        url: safeURL(x.url || ""),
+        title: x.title.slice(0,200),
+        note: String(x.note || ""),
+        category: String(x.category || ""),
+        tags: Array.isArray(x.tags) ? x.tags.map(String) : [],
+        project: String(x.project || ""),
+        summary: String(x.summary || ""),
+        createdAt: Number(x.createdAt) || Date.now(),
+        updatedAt: Number(x.updatedAt) || Date.now(),
+        favorite: Boolean(x.favorite)
+      }));
+      if (!valid.length) throw new Error("No valid ideas were found in this backup.");
+      const existingIds = new Set(items.map(x => x.id));
+      const newItems = valid.filter(x => !existingIds.has(x.id));
+      if (!confirm(`Found ${valid.length} ideas. Add ${newItems.length} new items? Existing IDs will be skipped.`)) return;
+      const previous = items;
+      items = [...newItems, ...items];
+      if (!persist()) items = previous;
+      render();
+      alert(`Imported ${items.length - previous.length} ideas.`);
+    } catch (err) {
+      alert("Import failed: " + err.message);
+    } finally {
+      e.target.value = "";
+    }
+  });
+
+  $("helpBtn").addEventListener("click", () => $("help").showModal());
+  $("helpClose").addEventListener("click", () => $("help").close());
+  $("helpDone").addEventListener("click", () => $("help").close());
+
+  render();
+})();
+</script>
+</body>
+</html>
