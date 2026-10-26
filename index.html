@@ -514,7 +514,24 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 12px
   $("helpClose").addEventListener("click", () => $("help").close());
   $("helpDone").addEventListener("click", () => $("help").close());
 
+  
   render();
+
+  // Receive links from the iPhone Share Sheet.
+  const params = new URLSearchParams(window.location.search);
+  const sharedURL = params.get("url");
+
+  if (sharedURL && safeURL(sharedURL)) {
+    openEditor();
+    $("url").value = sharedURL;
+
+    // Clear the parameter to prevent reopening the form.
+    window.history.replaceState(
+      {},
+      "",
+      window.location.pathname
+    );
+  }
 })();
 </script>
 
