@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "ideavault-v3";
+const CACHE_NAME = "ideavault-v4";
 
 const APP_FILES = [
   "./",
