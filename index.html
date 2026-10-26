@@ -171,6 +171,7 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 12px
     <input id="search" class="search" type="search"
       placeholder="Search ideas, notes, tags..." aria-label="Search ideas">
     <button class="primary" id="addBtn">＋ Save</button>
+    <button class="secondary" id="pasteLinkBtn">Paste shared link</button>
   </div>
 
   <div class="stats">
@@ -421,6 +422,22 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 12px
   }
 
   $("addBtn").addEventListener("click", () => openEditor());
+  $("pasteLinkBtn").addEventListener("click", async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    const url = safeURL(text.trim());
+
+    if (!url) {
+      alert("No valid webpage link found on the clipboard.");
+      return;
+    }
+
+    openEditor();
+    $("url").value = url;
+  } catch (error) {
+    alert("Unable to read the clipboard. Please allow clipboard access and try again.");
+  }
+});
   $("closeBtn").addEventListener("click", () => $("editor").close());
   $("cancelBtn").addEventListener("click", () => $("editor").close());
   $("search").addEventListener("input", e => { query = e.target.value; render(); });
