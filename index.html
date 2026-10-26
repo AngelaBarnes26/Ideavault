@@ -1,7 +1,10 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#f7f5f0"/head>
+
+  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f7f5f0">
@@ -511,6 +514,17 @@ footer { text-align: center; color: var(--muted); font-size: 11px; padding: 12px
 
   render();
 })();
+</script>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .catch((error) => {
+          console.error("Service worker registration failed:", error);
+        });
+    });
+  }
 </script>
 </body>
 </html>
